@@ -1,5 +1,6 @@
 "use strict";
 const UserModel = require("../models/UserModel");
+const UUID = require("uuid");
 
 var UserServices = {
     getUserData: async function (
@@ -27,7 +28,7 @@ var UserServices = {
         var data;
         try {
             var userId = await UUID.v4();
-            userData.userId = userId.toString();
+            userData.key = userId.toString();
 
             var userObject = new UserModel(userData);
             var data = await userObject.save();

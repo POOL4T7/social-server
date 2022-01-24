@@ -16,6 +16,10 @@ const io = new Server(httpServer, {
         methods: ["GET", "POST"],
     },
 });
+/**
+ * @description import routes
+ */
+const AuthRoutes = require("./routes/AuthRoutes");
 
 mongodb();
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -34,6 +38,8 @@ app.get("/", (req, res) => {
     res.status(200).json(response);
 });
 
+app.use("/api/user", AuthRoutes);
+
 /**
  * @description Page NOT FOUND Error
  */
@@ -50,7 +56,6 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 8080;
 const NODE_ENV = process.env.NODE_ENV;
-
 
 httpServer.listen(PORT, () => {
     console.log(`Server is running on ${PORT} in ${NODE_ENV}`);

@@ -2,7 +2,7 @@
 
 var Common = {
   DB: {
-    URL: "mongodb://gulshan:1alyxstar@localhost:27017/models?authSource=admin",
+    URL: "mongodb://gulshan:1alyxstar@localhost:27017/social?authSource=admin",
   },
 };
 
