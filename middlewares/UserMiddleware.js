@@ -27,14 +27,14 @@ var UserMiddleware = {
                         success: 0,
                         message: "something went wrong",
                     };
-                    return res.send(response);
+                    return res.status(404).json(response);
                 }
             } else {
                 var response = {
                     success: 0,
                     message: "Invalid token",
                 };
-                return res.send(response);
+                return res.status(400).json(response);
             }
         } catch (e) {
             var response = {
