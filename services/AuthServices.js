@@ -43,7 +43,7 @@ var AuthServices = {
         }
         return data;
     },
-    generateUsername: async function (name) {
+    generateUsername: async function () {
         var username = "";
         try {
             username = await Math.random().toString(36).substring(2, 7).toUpperCase()

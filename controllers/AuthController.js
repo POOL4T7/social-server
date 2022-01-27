@@ -24,8 +24,8 @@ var AuthController = {
             }
             var user = await UserServices.addUser(formData);
             var token = await AuthServices.generateToken({
-                _id: user._id,
-                key: user.key,
+                userId: user.userId,
+                success: 1
             });
             user.password = undefined;
             var response = {
@@ -67,8 +67,8 @@ var AuthController = {
             }
             delete user.password;
             var token = await AuthServices.generateToken({
-                _id: user._id,
-                key: user.key,
+                success: 1,
+                userId: user.userId,
             });
             var response = {
                 success: 1,

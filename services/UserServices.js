@@ -28,7 +28,7 @@ var UserServices = {
         var data;
         try {
             var userId = await UUID.v4();
-            userData.key = userId.toString();
+            userData.userId = userId.toString();
 
             var userObject = new UserModel(userData);
             var data = await userObject.save();

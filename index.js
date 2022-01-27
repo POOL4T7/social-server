@@ -20,6 +20,7 @@ const io = new Server(httpServer, {
  * @description import routes
  */
 const AuthRoutes = require("./routes/AuthRoutes");
+const UserRoutes = require("./routes/UserRoutes");
 
 mongodb();
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -38,7 +39,8 @@ app.get("/", (req, res) => {
     res.status(200).json(response);
 });
 
-app.use("/api/user", AuthRoutes);
+app.use("/api/auth", AuthRoutes);
+app.use("/api/user", UserRoutes);
 
 /**
  * @description Page NOT FOUND Error

@@ -1,45 +1,11 @@
 "use strict";
-const ProfileServices = require("../services/ProfileServices");
+const UserServices = require("../services/UserServices");
 
 var UserController = {
-    UserProfile: async function (req, res) {
+    getOwnProfile: async function (req, res) {
         try {
-            let profiles = await ProfileServices.getProfileData({
-                userId: req.user.key,
-            });
-            if (profiles.length > 0) {
-                var profile = profiles[0];
-                let data = await ProfileServices.updateProfileDetails(
-                    { userId: req.user.key },
-                    {
-                        name: req.body.name || profile.name,
-                        bio: req.body.bio || profile.bio,
-                        gender: req.body.gender || profile.gender,
-                        age: req.body.age || profile.age,
-                    }
-                );
-                var response = {
-                    success: 1,
-                    msg: "Profile updated",
-                    data: data,
-                };
-                return res.status(200).json(response);
-            } else {
-                let profile = await ProfileServices.addProfile({
-                    username: req.body.username,
-                    name: req.body.name,
-                    bio: req.body.bio,
-                    gender: req.body.gender,
-                    age: req.body.age,
-                    country: req.body.country,
-                });
-                var response = {
-                    success: 1,
-                    msg: "User profile added",
-                    data: profile,
-                };
-                return res.status(201).json(response);
-            }
+            let user = req.user;
+            return res.send(user);
         } catch (e) {
             var response = {
                 success: 0,
@@ -49,23 +15,36 @@ var UserController = {
             return res.status(500).json(response);
         }
     },
-    getUserProfile: async function (req, res) {
+    updateOwnProfile: async function (req, res) {
         try {
-            let profiles = await ProfileServices.getProfileData({
-                userId: req.user.key,
-            });
-            if (profiles.length > 0) {
-                var profile = profiles[0];
-                var response = {
+            var filter = {
+                _id: req.body.id,
+                userId: req.user.userId,
+            };
+            var profile = req.user.profileDetails;
+            var formData = {
+                $set: {
+                    "profileDetails": {
+                        name: req.body.name || profile.name,
+                        bio: req.body.bio || profile.bio,
+                        gender: req.body.gender || profile.gender,
+                        age: req.body.age || profile.age,
+                    }
+                }
+            };
+            let data = await UserServices.updateUserDetails(filter, formData);
+            var response = {};
+            if (data) {
+                response = {
                     success: 1,
-                    msg: "User profile",
-                    data: profile,
+                    msg: "Profile updated",
+                    data: data,
                 };
                 return res.status(200).json(response);
             } else {
-                var response = {
+                response = {
                     success: 0,
-                    msg: "Profile not found",
+                    msg: "Something went wrong",
                 };
                 return res.status(404).json(response);
             }
