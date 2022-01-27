@@ -56,14 +56,14 @@ const UserSchema = mongoose.Schema({
             enum: ["Male", "Female"],
             required: true,
         },
-        followers: {
-            type: Array,
-            default: []
-        },
-        followings: {
-            type: Array,
-            default: []
-        },
+    },
+    followers: {
+        type: Array,
+        default: []
+    },
+    followings: {
+        type: Array,
+        default: []
     },
     settings: {
         protected: {

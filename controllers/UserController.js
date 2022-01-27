@@ -21,6 +21,7 @@ var UserController = {
                 _id: req.body.id,
                 userId: req.user.userId,
             };
+            console.log('req.body', req.body);
             var profile = req.user.profileDetails;
             var formData = {
                 $set: {
@@ -29,6 +30,9 @@ var UserController = {
                         bio: req.body.bio || profile.bio,
                         gender: req.body.gender || profile.gender,
                         age: req.body.age || profile.age,
+                        username: req.body.username || profile.username,
+                        profile: profile.profile,
+                        country: profile.country,
                     }
                 }
             };
