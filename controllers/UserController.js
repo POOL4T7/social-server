@@ -21,7 +21,6 @@ var UserController = {
                 _id: req.body.id,
                 userId: req.user.userId,
             };
-            console.log("req.body", req.body);
             var profile = req.user.profileDetails;
             var formData = {
                 $set: {
@@ -70,19 +69,12 @@ var UserController = {
                 0,
                 30
             );
-            if (users.length > 0) {
-                var response = {
-                    success: 1,
-                    msg: "Users List",
-                    data: users,
-                };
-                return res.status(200).json(response);
-            }
             var response = {
-                success: 0,
-                msg: "Users List NOT FOUND",
+                success: 1,
+                msg: "Users List",
+                data: users,
             };
-            return res.status(404).json(response);
+            return res.status(200).json(response);
         } catch (e) {
             var response = {
                 success: 0,
@@ -103,7 +95,7 @@ var UserController = {
                 userId: req.params.userId,
             });
             if (currentUser.length > 0) {
-               var user = currentUser[0];
+                var user = currentUser[0];
                 if (!user.followers.includes(req.user.userId)) {
                     await UserServices.updateUserDetails(
                         { userId: req.params.userId },
@@ -146,8 +138,8 @@ var UserController = {
                 userId: req.params.userId,
             });
             if (currentUser.length > 0) {
-                user = currentUser[0];
-                if (user.followers.include(req.user.userId)) {
+                var user = currentUser[0];
+                if (user.followers.includes(req.user.userId)) {
                     await UserServices.updateUserDetails(
                         { userId: req.params.userId },
                         { $pull: { followers: req.user.userId } }
@@ -172,6 +164,120 @@ var UserController = {
                 msg: "You can't unfollow this user",
             };
             return res.status(400).json(response);
+        } catch (e) {
+            var response = {
+                success: 0,
+                msg: "Server error",
+                error: e.message,
+            };
+            return res.status(500).json(response);
+        }
+    },
+    addLike: async function (req, res) {
+        try {
+            if (req.params.userId === req.user.userId) {
+                return res
+                    .status(400)
+                    .json({ success: 0, msg: "You can't like your profile" });
+            }
+            var currentUser = await UserServices.getUserData({
+                userId: req.params.userId,
+            });
+            if (currentUser.length > 0) {
+                var user = currentUser[0];
+                if (!user.likes.includes(req.user.userId)) {
+                    var data = await UserServices.updateUserDetails(
+                        { userId: req.params.userId },
+                        { $push: { likes: req.user.userId } }
+                    );
+                    if (data) {
+                        var response = { success: 1, msg: "user profile has been liked" };
+                        return res.status(200).json(response);
+                    } else {
+                        var response = { success: 1, msg: "Something went wrong" };
+                        return res.status(404).json(response);
+                    }
+                } else {
+                    var response = {
+                        success: 1,
+                        msg: "You can't like this user profile",
+                    };
+                    return res.status(400).json(response);
+                }
+            }
+            var response = {
+                success: 0,
+                msg: "You can't like this user profile",
+            };
+            return res.status(400).json(response);
+        } catch (e) {
+            var response = {
+                success: 0,
+                msg: "Server error",
+                error: e.message,
+            };
+            return res.status(500).json(response);
+        }
+    },
+    removeLike: async function (req, res) {
+        try {
+            if (req.params.userId === req.user.userId) {
+                return res
+                    .status(400)
+                    .json({ success: 0, msg: "You can't like your profile" });
+            }
+            var currentUser = await UserServices.getUserData({
+                userId: req.params.userId,
+            });
+            if (currentUser.length > 0) {
+                var user = currentUser[0];
+                if (user.likes.includes(req.user.userId)) {
+                    var data = await UserServices.updateUserDetails(
+                        { userId: req.params.userId },
+                        { $pull: { likes: req.user.userId } }
+                    );
+                    if (data) {
+                        var response = {
+                            success: 1,
+                            msg: "user profile has been disliked",
+                        };
+                        return res.status(200).json(response);
+                    } else {
+                        var response = { success: 1, msg: "Something went wrong" };
+                        return res.status(200).json(response);
+                    }
+                } else {
+                    var response = {
+                        success: 1,
+                        msg: "You can't dislike this user profile",
+                    };
+                    return res.status(400).json(response);
+                }
+            }
+            var response = {
+                success: 0,
+                msg: "You can't dislike this user profile",
+            };
+            return res.status(400).json(response);
+        } catch (e) {
+            var response = {
+                success: 0,
+                msg: "Server error",
+                error: e.message,
+            };
+            return res.status(500).json(response);
+        }
+    },
+    getUserFollowings: async function (req, res) {
+        try {
+            let followings = req.user.followings;
+            var friends = await Promise.all(
+                followings.map((friendId) => {
+                    return await UserServices.getUserData({ userId: friendId }, ["_id", "userId", "profileDetails"]);
+                })
+            );
+            var response = { success: 1, data: friends, msg: "List of friend" };
+            return res.status(200).json(response);
         } catch (e) {
             var response = {
                 success: 0,

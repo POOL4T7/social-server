@@ -65,6 +65,10 @@ const UserSchema = mongoose.Schema({
         type: Array,
         default: []
     },
+    likes: {
+        type: Array,
+        default: []
+    },
     settings: {
         protected: {
             type: Boolean,

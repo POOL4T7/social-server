@@ -16,7 +16,6 @@ var UserMiddleware = {
                 return res.status(404).json(response);
             }
             var userData = await AuthServices.VerifyToken(loginToken);
-            console.log('userData', userData);
             if (userData?.success == 1 && userData.userId !== "NA") {
                 var userId = userData.userId;
                 var filter = { userId: userId };
