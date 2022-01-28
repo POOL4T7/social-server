@@ -8,12 +8,16 @@ var UserMiddleware = {
         try {
             let loginToken = req.headers["login-token"];
 
-            if (loginToken === null || loginToken === undefined || !loginToken)
-                throw new Error("loginToken Not Found");
-
+            if (loginToken === null || loginToken === undefined || !loginToken) {
+                var response = {
+                    success: 0,
+                    message: "loginToken Not Found",
+                };
+                return res.status(404).json(response);
+            }
             var userData = await AuthServices.VerifyToken(loginToken);
-
-            if (userData?.success == 1 && userData.userId != "NA") {
+            console.log('userData', userData);
+            if (userData?.success == 1 && userData.userId !== "NA") {
                 var userId = userData.userId;
                 var filter = { userId: userId };
                 var userDetails = await UserServices.getUserData(filter);
@@ -39,7 +43,7 @@ var UserMiddleware = {
         } catch (e) {
             var response = {
                 success: 0,
-                msg: "Server error",
+                msg: "server error",
                 error: e.message,
             };
             return res.status(500).json(response);

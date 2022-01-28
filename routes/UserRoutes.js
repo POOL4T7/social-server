@@ -8,9 +8,10 @@ router
     .get(UserMiddleware.protect, UserController.getOwnProfile)
     .patch(UserMiddleware.protect, UserController.updateOwnProfile);
 
-router.route("/profile/:id").get();
+router.route("/list").get(UserController.getUsersList);
 
-router.route("/:id/follow").patch();
-router.route("/:id/unfollow").patch();
+
+router.route("/:userId/follow").patch(UserMiddleware.protect, UserController.followUser);
+router.route("/:userId/unfollow").patch(UserMiddleware.protect, UserController.unFollowUser);
 
 module.exports = router;
