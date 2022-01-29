@@ -7,7 +7,6 @@ var UserMiddleware = {
     protect: async function (req, res, next) {
         try {
             let loginToken = req.headers["login-token"];
-
             if (loginToken === null || loginToken === undefined || !loginToken) {
                 var response = {
                     success: 0,

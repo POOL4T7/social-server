@@ -272,8 +272,15 @@ var UserController = {
         try {
             let followings = req.user.followings;
             var friends = await Promise.all(
-                followings.map((friendId) => {
-                    return await UserServices.getUserData({ userId: friendId }, ["_id", "userId", "profileDetails"]);
+                followings.map(async (friendId) => {
+                    let userDetails = await UserServices.getUserData(
+                        { userId: friendId },
+                        ["_id", "userId", "profileDetails"]
+                    );
+                    if (userDetails.length > 0) {
+                        let user = await userDetails[0];
+                        return user;
+                    }
                 })
             );
             var response = { success: 1, data: friends, msg: "List of friend" };
