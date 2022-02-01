@@ -21,6 +21,8 @@ const io = new Server(httpServer, {
  */
 const AuthRoutes = require("./routes/AuthRoutes");
 const UserRoutes = require("./routes/UserRoutes");
+const ChatRoutes = require("./routes/ChatRoutes");
+const MessageRoutes = require("./routes/MessageRoutes");
 
 mongodb();
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -41,6 +43,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", AuthRoutes);
 app.use("/api/user", UserRoutes);
+app.use("/api/chat", ChatRoutes);
+app.use("/api/message", MessageRoutes);
 
 /**
  * @description Page NOT FOUND Error

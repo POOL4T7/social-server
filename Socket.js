@@ -14,21 +14,23 @@ const get = (userId) => {
 };
 
 var Socket = (io, socket) => {
-
     const addUser = ({ userId, socketId }) => {
         add(userId, socketId);
         io.emit("getUsers", users);
-        console.log('users', users);
     };
 
     const removeUser = (socketId) => {
-        remove(socketId)
-        io.emit('getUsers', users)
-        console.log('users', users);
-    }
+        remove(socketId);
+        io.emit("getUsers", users);
+    };
+    const sendMessage = ({ senderId, receiverId, text }) => {
+        var user = get(receiverId);
+        io.to(user.socketId).emit("getMessage", { senderId, text });
+    };
 
     socket.on("addUser", addUser);
     socket.on("disconnect", removeUser);
+    socket.on("sendMessage", sendMessage);
 };
 
 module.exports = Socket;

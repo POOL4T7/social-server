@@ -1,5 +1,6 @@
 "use strict";
 const UserServices = require("../services/UserServices");
+const ChatServices = require("../services/ChatServices")
 
 var UserController = {
     getOwnProfile: async function (req, res) {
@@ -105,7 +106,7 @@ var UserController = {
                         { userId: req.user.userId },
                         { $push: { followings: req.params.userId } }
                     );
-
+                    const data = await ChatServices.addChat({ members: [req.user.userId, req.params.userId] })
                     var response = { success: 1, msg: "user has been followed" };
                     return res.status(200).json(response);
                 } else {
@@ -148,7 +149,7 @@ var UserController = {
                         { userId: req.user.userId },
                         { $pull: { followings: req.params.userId } }
                     );
-
+                    await ChatServices.deleteChat({ members: [req.user.userId, req.params.userId] })
                     var response = { success: 1, msg: "user has been unfollowed" };
                     return res.status(200).json(response);
                 } else {
@@ -275,7 +276,7 @@ var UserController = {
                 followings.map(async (friendId) => {
                     let userDetails = await UserServices.getUserData(
                         { userId: friendId },
-                        ["_id", "userId", "profileDetails"]
+                        ["-password"]
                     );
                     if (userDetails.length > 0) {
                         let user = await userDetails[0];
