@@ -23,7 +23,6 @@ var MessageController = {
                         msg: "Chat Added",
                         data: data,
                     };
-                    console.log(response);
                     return res.status(200).json(response);
                 } else {
                     var response = {

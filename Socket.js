@@ -14,17 +14,21 @@ const get = (userId) => {
 };
 
 var Socket = (io, socket) => {
-    const addUser = ({ userId, socketId }) => {
-        add(userId, socketId);
+    const addUser = ({ userId }) => {
+        add(userId, socket.id);
         io.emit("getUsers", users);
+        console.log(`users after new user added: `, users);
     };
 
-    const removeUser = (socketId) => {
-        remove(socketId);
+    const removeUser = () => {
+        remove(socket.id);
         io.emit("getUsers", users);
+        // console.log(`users ${users} remove of socketId: ${socket.id}`);
     };
+
     const sendMessage = ({ senderId, receiverId, text }) => {
         var user = get(receiverId);
+        // console.log(`user ${user.userId} with socketId ${user.socketId} which receive the message; ${text}`);
         io.to(user.socketId).emit("getMessage", { senderId, text });
     };
 
