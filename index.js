@@ -10,12 +10,13 @@ const { createServer } = require("http");
 const Socket = require("./Socket");
 app.use(cors());
 const httpServer = createServer(app);
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 const io = new Server(httpServer, {
   cors: {
     origin:
       process.env.NODE_ENV === "production"
-        ? "https://encychat.herokuapp.com/"
-        : "http://localhost:3000/",
+        ? "https://encychat.herokuapp.com"
+        : "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
