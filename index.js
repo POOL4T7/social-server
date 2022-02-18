@@ -12,7 +12,10 @@ app.use(cors());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://social1server.herokuapp.com/",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://encychat.herokuapp.com/"
+        : "http://localhost:3000/",
     methods: ["GET", "POST"],
   },
 });
