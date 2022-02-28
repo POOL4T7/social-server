@@ -53,8 +53,9 @@ const MessageController = {
       const chats = await ChatServices.getChatData(filter);
       if (chats.length > 0) {
         const chat = chats[0];
+        const { _id } = chat;
         filter = {
-          chatId: chat.id,
+          chatId: _id,
         };
         const data = await MessageServices.getMessageData(filter);
         const response = {
