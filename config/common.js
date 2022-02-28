@@ -1,8 +1,6 @@
-"use strict";
-
-var Common = {
+const Common = {
   DB: {
-    URL: "mongodb://gulshan:1alyxstar@localhost:27017/social?authSource=admin",
+    URL: 'mongodb://gulshan:1alyxstar@localhost:27017/social?authSource=admin',
   },
 };
 

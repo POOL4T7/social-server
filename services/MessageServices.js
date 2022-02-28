@@ -1,38 +1,37 @@
-"use strict";
-const MessageModel = require("../models/MessageModel");
+const MessageModel = require('../models/MessageModel');
 
-var UserServices = {
-    getMessageData: async function (
-        filter = {},
-        select = [],
-        sort = {},
-        skip = 0,
-        limit = {}
-    ) {
-        var data = [];
+const UserServices = {
+  async getMessageData(
+    filter = {},
+    select = [],
+    sort = {},
+    skip = 0,
+    limit = {},
+  ) {
+    let data = [];
 
-        try {
-            var data = await MessageModel.find(filter)
-                .select(select)
-                .sort(sort)
-                .skip(skip)
-                .limit(limit)
-                .lean();
-        } catch (e) {
-            console.log(e);
-        }
-        return data;
-    },
-    addMessage: async function (chatData) {
-        var data = {};
-        try {
-            var messageObject = new MessageModel(chatData);
-            var data = await messageObject.save();
-        } catch (e) {
-            console.log(e);
-        }
-        return data;
-    },
+    try {
+      data = await MessageModel.find(filter)
+        .select(select)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean();
+    } catch (e) {
+      console.log(e);
+    }
+    return data;
+  },
+  async addMessage(chatData) {
+    let data = {};
+    try {
+      const messageObject = new MessageModel(chatData);
+      data = await messageObject.save();
+    } catch (e) {
+      console.log(e);
+    }
+    return data;
+  },
 };
 
 module.exports = UserServices;
