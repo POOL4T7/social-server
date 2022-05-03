@@ -19,6 +19,7 @@ const UserServices = {
         .lean();
     } catch (e) {
       console.log(e);
+      throw Error(e.message);
     }
     return data;
   },
@@ -29,6 +30,7 @@ const UserServices = {
       data = await chatObject.save();
     } catch (e) {
       console.log(e);
+      throw Error(e.message);
     }
     return data;
   },
@@ -37,7 +39,8 @@ const UserServices = {
       const data = await ChatModel.deleteOne(filter);
       console.log('deleted data: ', data);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
   },
 };

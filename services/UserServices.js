@@ -20,6 +20,7 @@ const UserServices = {
         .lean();
     } catch (e) {
       console.log(e);
+      throw Error(e.message);
     }
     return data;
   },
@@ -34,6 +35,7 @@ const UserServices = {
       data = await userObject.save();
     } catch (e) {
       console.log(e);
+      throw Error(e.message);
     }
     return data;
   },
@@ -45,9 +47,9 @@ const UserServices = {
         new: true,
       });
       return data;
-    } catch (err) {
-      console.log(err);
-      return data;
+    } catch (e) {
+      console.log(e);
+      throw Error(e.message);
     }
   },
 };

@@ -9,7 +9,8 @@ const AuthServices = {
         expiresIn: '30d',
       });
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
     return token;
   },
@@ -18,7 +19,8 @@ const AuthServices = {
     try {
       decode = await JWT.verify(token, process.env.JWT_SECRET);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
     return decode;
   },
@@ -28,7 +30,8 @@ const AuthServices = {
       const salt = await bcrypt.genSalt(10);
       hashPassword = await bcrypt.hash(password, salt);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
     return hashPassword;
   },
@@ -37,7 +40,8 @@ const AuthServices = {
     try {
       data = await bcrypt.compare(password, hashPassword);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
     return data;
   },
@@ -46,7 +50,8 @@ const AuthServices = {
     try {
       username = await Math.random().toString(36).substring(2, 7).toUpperCase();
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
+      throw Error(e.message);
     }
     return username;
   },
