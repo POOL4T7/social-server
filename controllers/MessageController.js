@@ -1,39 +1,25 @@
 const MessageServices = require('../services/MessageServices');
-const ChatServices = require('../services/ChatServices');
 
 const MessageController = {
   async sendMessage(req, res) {
     try {
-      const filter = {
-        members: { $all: [req.user.userId, req.params.userId] },
+      const chatData = {
+        senderId: req.user.userId,
+        receiverId: req.user.userId,
+        text: req.body.text,
       };
-      const chats = await ChatServices.getChatData(filter);
-      if (chats.length > 0) {
-        const chat = chats[0];
-        const { _id } = chat;
-        const chatData = {
-          senderId: req.user.userId,
-          text: req.body.text,
-          chatId: _id,
-        };
-        const data = await MessageServices.addMessage(chatData);
-        if (data) {
-          const response = {
-            success: 1,
-            msg: 'Chat Added',
-            data,
-          };
-          return res.status(200).json(response);
-        }
+      const data = await MessageServices.addMessage(chatData);
+      if (data) {
         const response = {
-          success: 0,
-          msg: 'Something went wrong',
+          success: 1,
+          msg: 'Chat Added',
+          data,
         };
-        return res.status(400).json(response);
+        return res.status(200).json(response);
       }
       const response = {
         success: 0,
-        msg: 'you have to follow him first',
+        msg: 'Something went wrong',
       };
       return res.status(400).json(response);
     } catch (e) {
@@ -47,17 +33,15 @@ const MessageController = {
   },
   async getMessages(req, res) {
     try {
-      let filter = {
-        members: { $all: [req.user.userId, req.params.userId] },
+      const { _id } = req.user;
+      const filter = {
+        $or: [
+          { senderId: _id, receiverId: req.params.id },
+          { receiverId: _id, senderId: req.params.id },
+        ],
       };
-      const chats = await ChatServices.getChatData(filter);
-      if (chats.length > 0) {
-        const chat = chats[0];
-        const { _id } = chat;
-        filter = {
-          chatId: _id,
-        };
-        const data = await MessageServices.getMessageData(filter);
+      const data = await MessageServices.getMessageData(filter);
+      if (data.length > 0) {
         const response = {
           success: 0,
           msg: 'Uses Messages',

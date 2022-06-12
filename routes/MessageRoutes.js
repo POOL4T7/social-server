@@ -4,7 +4,6 @@ const MessageController = require('../controllers/MessageController');
 
 router
   .route('/:userId')
-  .get(UserMiddleware.protect, MessageController.getMessages)
-  .post(UserMiddleware.protect, MessageController.sendMessage);
+  .get(UserMiddleware.protect, MessageController.getMessages);
 
 module.exports = router;

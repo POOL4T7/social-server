@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-expressions */
-const MessageServices = require('./services/MessageServices');
+const MessageServices = require('../services/MessageServices');
 
 let users = [];
 
@@ -37,21 +36,20 @@ const Socket = (io, socket) => {
           msg: 'Chat Added',
           data,
         };
-        user && io.to(user?.socketId).emit('getMessage', response);
-        return;
+        io.to(user.socketId).emit('getMessage', response);
       }
       const response = {
         success: 0,
         msg: 'Something went wrong',
       };
-      console.log(response);
+      io.to(user.socketId).emit('error', response);
     } catch (e) {
       const response = {
         success: 0,
         msg: 'Server error',
         error: e.message,
       };
-      console.log(response);
+      io.to(user.socketId).emit('error', response);
     }
   };
 
