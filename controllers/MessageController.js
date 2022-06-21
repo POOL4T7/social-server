@@ -33,27 +33,20 @@ const MessageController = {
   },
   async getMessages(req, res) {
     try {
-      const { _id } = req.user;
+      const { userId } = req.user;
       const filter = {
         $or: [
-          { senderId: _id, receiverId: req.params.id },
-          { receiverId: _id, senderId: req.params.id },
+          { senderId: userId, receiverId: req.params.userId },
+          { receiverId: userId, senderId: req.params.userId },
         ],
       };
       const data = await MessageServices.getMessageData(filter);
-      if (data.length > 0) {
-        const response = {
-          success: 0,
-          msg: 'Uses Messages',
-          data,
-        };
-        return res.status(200).json(response);
-      }
       const response = {
         success: 0,
-        msg: 'Chat Not Found',
+        msg: 'Uses Messages',
+        data,
       };
-      return res.status(404).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       const response = {
         success: 0,
